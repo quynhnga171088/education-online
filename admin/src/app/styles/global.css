@@ -1,0 +1,72 @@
+/* ─── Google Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── Admin Global CSS & Design Tokens ─── */
+:root {
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-secondary: #7c3aed;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --color-info: #0891b2;
+
+  /* Admin-specific: darker sidebar bg */
+  --color-sidebar-bg: #1e1b4b;
+  --color-sidebar-text: #c7d2fe;
+  --color-sidebar-active: #4f46e5;
+
+  --color-bg: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Admin layout: sidebar + content */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background-color: var(--color-sidebar-bg);
+  color: var(--color-sidebar-text);
+  flex-shrink: 0;
+  padding: 1.5rem 0;
+}
+
+.admin-content {
+  flex: 1;
+  overflow-x: hidden;
+  padding: 2rem;
+}
+
+.admin-sidebar .nav-link {
+  color: var(--color-sidebar-text);
+  padding: 0.6rem 1.5rem;
+  border-radius: 0;
+  transition: background 0.2s;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+  background-color: var(--color-sidebar-active);
+  color: #fff;
+}

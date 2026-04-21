@@ -1,0 +1,116 @@
+version: '3.9'
+
+services:
+  # ─────────────────────────────────────────────
+  # PostgreSQL 15
+  # ─────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: lms_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lms_db
+      POSTGRES_USER: lms_user
+      POSTGRES_PASSWORD: lms_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - lms_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lms_user -d lms_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────────
+  # pgAdmin 4 (dev only)
+  # ─────────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: lms_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lms.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - lms_network
+    profiles:
+      - dev
+
+  # ─────────────────────────────────────────────
+  # Backend — Spring Boot
+  # ─────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lms_backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/lms_db
+      SPRING_DATASOURCE_USERNAME: lms_user
+      SPRING_DATASOURCE_PASSWORD: lms_password
+      APP_JWT_SECRET: "CHANGE_ME_IN_PRODUCTION_USE_LONG_RANDOM_SECRET_256BIT"
+      APP_JWT_EXPIRATION_MS: 900000
+      APP_REFRESH_TOKEN_EXPIRATION_DAYS: 30
+      APP_STORAGE_UPLOAD_DIR: /app/uploads
+      APP_STORAGE_BASE_URL: http://localhost:8080/uploads
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - lms_network
+
+  # ─────────────────────────────────────────────
+  # Frontend — Student Web (Vite + React)
+  # ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lms_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - lms_network
+
+  # ─────────────────────────────────────────────
+  # Admin — Admin/Teacher Web (Vite + React)
+  # ─────────────────────────────────────────────
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: lms_admin
+    restart: unless-stopped
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+    networks:
+      - lms_network
+
+# ─────────────────────────────────────────────
+# Volumes & Networks
+# ─────────────────────────────────────────────
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  lms_network:
+    driver: bridge

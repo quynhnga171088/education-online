@@ -1,0 +1,23 @@
+# Test profile — dùng H2 in-memory hoặc test DB
+spring:
+  datasource:
+    url: jdbc:h2:mem:lms_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+
+app:
+  jwt:
+    secret: "TEST_SECRET_KEY_FOR_UNIT_TESTS_ONLY_NOT_FOR_PRODUCTION"
+    expiration-ms: 900000
+  refresh-token:
+    expiration-days: 30
+  storage:
+    upload-dir: /tmp/lms-test-uploads
+    base-url: http://localhost:8080/uploads
