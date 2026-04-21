@@ -50,7 +50,7 @@ server:
 # ─────────────────────────────────────────
 app:
   jwt:
-    secret: "THIS_IS_A_DEV_SECRET_REPLACE_IN_PROD_WITH_256BIT_KEY_AT_MINIMUM"
+    secret: "VGhpc0lzQURldlNlY3JldEtleUZvckxNUzIwMjZQbGF0Zm9ybUJhY2tlbmRNdXN0QmUyNTZCaXRzT3JNb3JlISE="
     expiration-ms: 900000        # 15 minutes
   refresh-token:
     expiration-days: 30
