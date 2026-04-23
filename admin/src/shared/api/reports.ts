@@ -2,18 +2,23 @@ import axiosInstance from './axiosInstance'
 
 export interface TopCourseItem {
   courseId: number
-  courseTitle: string
+  title: string
+  slug: string
+  thumbnailUrl: string | null
   enrollmentCount: number
 }
 
+/** Matches backend `OverviewReportResponse` (JSON field names) */
 export interface OverviewReport {
   totalStudents: number
   totalTeachers: number
-  totalCourses: number
-  publishedCourses: number
-  totalApprovedEnrollments: number
-  pendingEnrollments: number
-  completedLessons: number
+  totalPublishedCourses: number
+  totalDraftCourses: number
+  totalArchivedCourses: number
+  totalEnrollmentsPending: number
+  totalEnrollmentsApproved: number
+  totalEnrollmentsRejected: number
+  totalLessonsCompleted: number
   topCourses: TopCourseItem[]
 }
 

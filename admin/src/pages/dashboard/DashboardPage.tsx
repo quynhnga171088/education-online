@@ -25,8 +25,7 @@ export function Component() {
 
   const topCoursesChartData =
     data?.topCourses.map((c) => ({
-      name:
-        c.courseTitle.length > 20 ? c.courseTitle.slice(0, 18) + '…' : c.courseTitle,
+      name: c.title.length > 20 ? c.title.slice(0, 18) + '…' : c.title,
       enrollments: c.enrollmentCount,
     })) ?? []
 
@@ -61,8 +60,12 @@ export function Component() {
               <StatsCard
                 icon="📚"
                 label="Khóa học"
-                value={data.totalCourses}
-                sub={`${data.publishedCourses} đã xuất bản`}
+                value={(
+                  data.totalPublishedCourses +
+                  data.totalDraftCourses +
+                  data.totalArchivedCourses
+                ).toLocaleString()}
+                sub={`${data.totalPublishedCourses} đã xuất bản`}
                 color="#059669"
               />
             </div>
@@ -70,7 +73,7 @@ export function Component() {
               <StatsCard
                 icon="✅"
                 label="Đăng ký đã duyệt"
-                value={data.totalApprovedEnrollments.toLocaleString()}
+                value={data.totalEnrollmentsApproved.toLocaleString()}
                 color="#0891b2"
               />
             </div>
@@ -78,9 +81,9 @@ export function Component() {
               <StatsCard
                 icon="⏳"
                 label="Chờ duyệt"
-                value={data.pendingEnrollments}
-                sub={data.pendingEnrollments > 0 ? 'Cần xét duyệt' : 'Không có'}
-                color={data.pendingEnrollments > 0 ? '#d97706' : '#64748b'}
+                value={data.totalEnrollmentsPending}
+                sub={data.totalEnrollmentsPending > 0 ? 'Cần xét duyệt' : 'Không có'}
+                color={data.totalEnrollmentsPending > 0 ? '#d97706' : '#64748b'}
               />
             </div>
           </div>
@@ -98,7 +101,7 @@ export function Component() {
               <StatsCard
                 icon="🏆"
                 label="Bài học hoàn thành"
-                value={data.completedLessons.toLocaleString()}
+                value={data.totalLessonsCompleted.toLocaleString()}
                 color="#d97706"
               />
             </div>
@@ -186,7 +189,7 @@ export function Component() {
                       {data.topCourses.map((c, i) => (
                         <tr key={c.courseId}>
                           <td className="ps-4 text-muted small">{i + 1}</td>
-                          <td className="fw-medium small">{c.courseTitle}</td>
+                          <td className="fw-medium small">{c.title}</td>
                           <td>
                             <span className="badge bg-primary bg-opacity-10 text-primary">
                               {c.enrollmentCount} học viên

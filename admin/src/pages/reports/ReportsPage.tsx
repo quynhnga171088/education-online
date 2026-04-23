@@ -19,9 +19,12 @@ export function Component() {
   if (!data) return <div className="text-muted">Không có dữ liệu</div>
 
   const topData = data.topCourses.map((c) => ({
-    name: c.courseTitle.length > 22 ? c.courseTitle.slice(0, 20) + '…' : c.courseTitle,
+    name: c.title.length > 22 ? c.title.slice(0, 20) + '…' : c.title,
     enrollments: c.enrollmentCount,
   }))
+
+  const totalCourses =
+    data.totalPublishedCourses + data.totalDraftCourses + data.totalArchivedCourses
 
   return (
     <div>
@@ -35,10 +38,10 @@ export function Component() {
         {[
           { icon: '🎓', label: 'Học viên', value: data.totalStudents, color: '#4f46e5' },
           { icon: '👨‍🏫', label: 'Giáo viên', value: data.totalTeachers, color: '#7c3aed' },
-          { icon: '📚', label: 'Khóa học', value: data.totalCourses, color: '#059669' },
-          { icon: '✅', label: 'Đã duyệt', value: data.totalApprovedEnrollments, color: '#0891b2' },
-          { icon: '⏳', label: 'Chờ duyệt', value: data.pendingEnrollments, color: '#d97706' },
-          { icon: '🏆', label: 'Bài học hoàn thành', value: data.completedLessons, color: '#dc2626' },
+          { icon: '📚', label: 'Khóa học', value: totalCourses, color: '#059669' },
+          { icon: '✅', label: 'Đã duyệt', value: data.totalEnrollmentsApproved, color: '#0891b2' },
+          { icon: '⏳', label: 'Chờ duyệt', value: data.totalEnrollmentsPending, color: '#d97706' },
+          { icon: '🏆', label: 'Bài học hoàn thành', value: data.totalLessonsCompleted, color: '#dc2626' },
         ].map((s) => (
           <div key={s.label} className="col-sm-6 col-xl-4">
             <StatsCard icon={s.icon} label={s.label} value={s.value.toLocaleString()} color={s.color} />
@@ -87,7 +90,7 @@ export function Component() {
                 {data.topCourses.map((c, i) => (
                   <tr key={c.courseId}>
                     <td className="ps-4 small text-muted">{i + 1}</td>
-                    <td className="fw-medium small">{c.courseTitle}</td>
+                    <td className="fw-medium small">{c.title}</td>
                     <td>
                       <span className="badge bg-primary bg-opacity-10 text-primary">
                         {c.enrollmentCount} học viên

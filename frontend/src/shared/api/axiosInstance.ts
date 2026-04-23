@@ -5,6 +5,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  timeout: 30_000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -37,12 +38,22 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = []
 }
 
+function isAuthPath(url: string | undefined): boolean {
+  if (!url) return false
+  return (
+    url.includes('/auth/login') ||
+    url.includes('/auth/register') ||
+    url.includes('/auth/refresh') ||
+    url.includes('/auth/logout')
+  )
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !isAuthPath(String(originalRequest?.url)) && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject })

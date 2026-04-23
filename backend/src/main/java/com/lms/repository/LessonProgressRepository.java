@@ -25,8 +25,6 @@ public interface LessonProgressRepository extends JpaRepository<LessonProgress, 
             """)
     long countCompletedByStudentAndCourse(@Param("student") User student, @Param("course") Course course);
 
-    Optional<LessonProgress> findByStudentAndLesson(User student, Lesson lesson);
-
     long countByStatus(LessonProgress.Status status);
 
     /** Returns [lessonId, lessonTitle, completedCount] per lesson for a course */

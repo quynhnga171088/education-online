@@ -6,9 +6,10 @@ spring:
   # Database
   # ─────────────────────────────────────────
   datasource:
-    url: jdbc:postgresql://192.168.99.60:5432/uob
-    username: uob
-    password: uob168
+    # Local dev: match docker-compose.yml service `postgres` (port 5432 on host)
+    url: jdbc:postgresql://127.0.0.1:5432/ 
+    username: lms_user
+    password: lms_password
     driver-class-name: org.postgresql.Driver
 
   jpa:

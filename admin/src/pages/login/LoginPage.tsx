@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authApi } from '../../shared/api/auth'
 import { useAuthStore } from '../../shared/store/authStore'
@@ -13,8 +13,13 @@ export function Component() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
+
   if (isAuthenticated) {
-    navigate('/', { replace: true })
     return null
   }
 
