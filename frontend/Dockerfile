@@ -7,6 +7,13 @@ COPY package*.json ./
 RUN npm ci --silent
 
 COPY . .
+
+# Injected at build time by docker-compose (or docker build --build-arg).
+# Default: /api  — works behind the nginx reverse proxy.
+# For local dev without Docker set VITE_API_BASE_URL=http://localhost:8080
+ARG VITE_API_BASE_URL=/api
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+
 RUN npm run build
 
 # ─── Stage 2: Serve với Nginx ────────────────────────────────────────────────

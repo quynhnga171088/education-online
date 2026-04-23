@@ -24,4 +24,18 @@ public interface LessonProgressRepository extends JpaRepository<LessonProgress, 
             WHERE lp.student = :student AND lp.course = :course AND lp.status = 'COMPLETED'
             """)
     long countCompletedByStudentAndCourse(@Param("student") User student, @Param("course") Course course);
+
+    Optional<LessonProgress> findByStudentAndLesson(User student, Lesson lesson);
+
+    long countByStatus(LessonProgress.Status status);
+
+    /** Returns [lessonId, lessonTitle, completedCount] per lesson for a course */
+    @Query("""
+            SELECT lp.lesson.id, lp.lesson.title, COUNT(lp)
+            FROM LessonProgress lp
+            WHERE lp.course.id = :courseId AND lp.status = :status
+            GROUP BY lp.lesson.id, lp.lesson.title
+            """)
+    List<Object[]> findLessonCompletionStatsByCourse(@Param("courseId") Long courseId,
+                                                     @Param("status") LessonProgress.Status status);
 }

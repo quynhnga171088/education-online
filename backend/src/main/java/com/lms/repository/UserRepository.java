@@ -13,13 +13,18 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailAndDeletedAtIsNull(String email);
 
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndDeletedAtIsNull(String email);
+
+    Optional<User> findByIdAndDeletedAtIsNull(Long id);
+
+    long countByRoleAndDeletedAtIsNull(User.Role role);
 
     @Query("""
             SELECT u FROM User u
-            WHERE (:role IS NULL OR u.role = :role)
+            WHERE u.deletedAt IS NULL
+              AND (:role IS NULL OR u.role = :role)
               AND (:status IS NULL OR u.status = :status)
               AND (:search IS NULL
                    OR LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))

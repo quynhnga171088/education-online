@@ -32,4 +32,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     );
 
     Page<Course> findAllByTeacher(User teacher, Pageable pageable);
+
+    long countByStatus(Course.Status status);
 }

@@ -43,4 +43,51 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
             WHERE e.course = :course AND e.status = 'APPROVED'
             """)
     List<Enrollment> findApprovedStudentsByCourse(@Param("course") Course course);
+
+    @Query("""
+            SELECT e FROM Enrollment e
+            JOIN FETCH e.course
+            WHERE e.student = :student
+            ORDER BY e.createdAt DESC
+            """)
+    List<Enrollment> findRecentByStudent(@Param("student") User student, Pageable pageable);
+
+    /**
+     * Batch-check enrollment status for multiple courses (used in course listing to append enrollmentStatus).
+     */
+    @Query("""
+            SELECT e FROM Enrollment e
+            WHERE e.student = :student AND e.course.id IN :courseIds
+            """)
+    List<Enrollment> findAllByStudentAndCourseIds(@Param("student") User student,
+                                                   @Param("courseIds") java.util.List<Long> courseIds);
+
+    long countByStatus(Enrollment.Status status);
+
+    long countByCourse(Course course);
+
+    /** Returns [courseId, courseTitle, courseSlug, courseThumbnailUrl, count] for top courses by enrollment */
+    @Query("""
+            SELECT e.course.id, e.course.title, e.course.slug, e.course.thumbnailUrl, COUNT(e)
+            FROM Enrollment e
+            GROUP BY e.course.id, e.course.title, e.course.slug, e.course.thumbnailUrl
+            ORDER BY COUNT(e) DESC
+            """)
+    List<Object[]> findTopCoursesByEnrollmentCount(Pageable pageable);
+
+    /** Returns [year, month, count] for enrollments of a course, grouped by month */
+    @Query(value = """
+            SELECT EXTRACT(YEAR FROM created_at)::int  AS year,
+                   EXTRACT(MONTH FROM created_at)::int AS month,
+                   COUNT(*)::int                       AS cnt
+            FROM enrollments
+            WHERE course_id = :courseId
+              AND created_at >= :from
+            GROUP BY 1, 2
+            ORDER BY 1, 2
+            """, nativeQuery = true)
+    List<Object[]> countEnrollmentsByMonth(@Param("courseId") Long courseId,
+                                           @Param("from") java.time.LocalDateTime from);
+
+    List<Enrollment> findAllByStudent(User student);
 }

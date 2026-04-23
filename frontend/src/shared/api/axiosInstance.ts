@@ -69,12 +69,13 @@ axiosInstance.interceptors.response.use(
           refreshToken,
         })
 
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-          response.data.data
+        const {
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+          user,
+        } = response.data
 
-        setAccessToken(newAccessToken)
-        // Also update refresh token if rotated
-        useAuthStore.setState({ refreshToken: newRefreshToken })
+        useAuthStore.getState().setAuth(user, newAccessToken, newRefreshToken)
 
         processQueue(null, newAccessToken)
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`

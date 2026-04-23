@@ -38,9 +38,8 @@ axiosInstance.interceptors.response.use(
       if (!refreshToken) { logout(); return Promise.reject(error) }
       try {
         const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken })
-        const { accessToken: newAt, refreshToken: newRt } = data.data
-        setAccessToken(newAt)
-        useAuthStore.setState({ refreshToken: newRt })
+        const { accessToken: newAt, refreshToken: newRt, user } = data
+        useAuthStore.getState().setAuth(user, newAt, newRt)
         processQueue(null, newAt)
         orig.headers.Authorization = `Bearer ${newAt}`
         return axiosInstance(orig)

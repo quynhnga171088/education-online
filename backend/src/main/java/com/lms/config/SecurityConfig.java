@@ -62,11 +62,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                         // Public course catalog
-                        .requestMatchers(HttpMethod.GET, "/courses").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/courses/{id}").permitAll()
-                        // Static file serving
+                        .requestMatchers(HttpMethod.GET, "/courses", "/courses/{courseId}").permitAll()
+                        // Lesson list is public (preview); controller decides detail level based on auth
+                        .requestMatchers(HttpMethod.GET, "/courses/{courseId}/lessons").permitAll()
+                        // Static file serving (Range-request-aware via WebMvcConfig resource handler)
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                        // Admin-only routes
+                        // Bank info is shown on the student payment page — public read
+                        .requestMatchers(HttpMethod.GET, "/admin/config/bank-info").permitAll()
+                        // Course report accessible to teacher who owns the course (checked in service)
+                        .requestMatchers(HttpMethod.GET, "/admin/reports/courses/{courseId}").hasAnyRole("TEACHER", "ADMIN")
+                        // All other admin routes require ADMIN role
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // All other requests require authentication
                         .anyRequest().authenticated()
