@@ -29,7 +29,7 @@ export function AdminLayout() {
     try {
       if (refreshToken) await authApi.logout(refreshToken)
     } catch {
-      // ignore
+      /* Do nothing */
     }
     logout()
     navigate('/login', { replace: true })

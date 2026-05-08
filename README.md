@@ -13,28 +13,29 @@ A full-stack Learning Management System built with **Spring Boot**, **React 19**
 │  /*      → frontend:80      (port 5174) → admin:80         │
 └──────────────────┬─────────────────────┬───────────────────┘
                    │                     │
-         ┌─────────▼──────────┐ ┌───────▼────────┐
+         ┌─────────▼──────────┐ ┌────────▼────────┐
          │  Backend (Spring)  │ │ frontend/admin  │
          │      :8080         │ │  (Nginx :80)    │
-         └─────────┬──────────┘ └────────────────┘
+         └─────────┬──────────┘ └─────────────────┘
                    │
          ┌─────────▼──────────┐
          │  PostgreSQL :5432  │
          └────────────────────┘
 ```
 
-| Service      | Host URL                          | Technology             |
-|--------------|-----------------------------------|------------------------|
-| Student Web  | http://localhost                  | React 19 + Vite        |
-| Admin Panel  | http://localhost:5174             | React 19 + Vite        |
-| Backend API  | http://localhost:8080             | Spring Boot 3          |
-| pgAdmin      | http://localhost:5050 (dev only)  | pgAdmin 4              |
+| Service     | Host URL                         | Technology      |
+| ----------- | -------------------------------- | --------------- |
+| Student Web | http://localhost                 | React 19 + Vite |
+| Admin Panel | http://localhost:5174            | React 19 + Vite |
+| Backend API | http://localhost:8080            | Spring Boot 3   |
+| pgAdmin     | http://localhost:5050 (dev only) | pgAdmin 4       |
 
 ---
 
 ## Quick Start (Docker Compose)
 
 ### Prerequisites
+
 - Docker Desktop 24+ with Compose v2
 - 4 GB RAM available for containers
 
@@ -69,10 +70,10 @@ curl http://localhost:8080/actuator/health  # backend direct
 
 ### 4. Access
 
-| URL | Description |
-|-----|-------------|
-| http://localhost | Student web app |
-| http://localhost:5174 | Admin / Teacher panel |
+| URL                                   | Description                     |
+| ------------------------------------- | ------------------------------- |
+| http://localhost                      | Student web app                 |
+| http://localhost:5174                 | Admin / Teacher panel           |
 | http://localhost:8080/swagger-ui.html | API docs (if SpringDoc enabled) |
 
 ---
@@ -180,26 +181,26 @@ EDUCATION_ONLINE/
 
 ### Public Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/auth/register` | Student registration |
-| POST | `/auth/login` | Login (returns JWT) |
-| POST | `/auth/refresh` | Refresh access token |
-| GET  | `/courses` | List published courses |
-| GET  | `/courses/{id}` | Course detail |
-| GET  | `/courses/{id}/lessons` | Lesson list (preview) |
-| GET  | `/admin/config/bank-info` | Bank info for payment |
+| Method | Path                      | Description            |
+| ------ | ------------------------- | ---------------------- |
+| POST   | `/auth/register`          | Student registration   |
+| POST   | `/auth/login`             | Login (returns JWT)    |
+| POST   | `/auth/refresh`           | Refresh access token   |
+| GET    | `/courses`                | List published courses |
+| GET    | `/courses/{id}`           | Course detail          |
+| GET    | `/courses/{id}/lessons`   | Lesson list (preview)  |
+| GET    | `/admin/config/bank-info` | Bank info for payment  |
 
 ### Authenticated (Student)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET  | `/enrollments` | My enrollments |
-| POST | `/enrollments` | Enroll in course |
-| POST | `/enrollments/{id}/payment-proof` | Upload payment proof |
-| GET  | `/progress/{courseId}` | Course progress |
-| POST | `/progress/{lessonId}/open` | Mark lesson opened |
-| PUT  | `/progress/{lessonId}/video` | Update video progress |
+| Method | Path                              | Description           |
+| ------ | --------------------------------- | --------------------- |
+| GET    | `/enrollments`                    | My enrollments        |
+| POST   | `/enrollments`                    | Enroll in course      |
+| POST   | `/enrollments/{id}/payment-proof` | Upload payment proof  |
+| GET    | `/progress/{courseId}`            | Course progress       |
+| POST   | `/progress/{lessonId}/open`       | Mark lesson opened    |
+| PUT    | `/progress/{lessonId}/video`      | Update video progress |
 
 ### Admin/Teacher
 
@@ -230,16 +231,16 @@ VALUES (
 
 ## Environment Variables Reference
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `POSTGRES_DB` | `lms_db` | Database name |
-| `POSTGRES_USER` | `lms_user` | DB username |
-| `POSTGRES_PASSWORD` | `lms_password` | DB password |
-| `APP_JWT_SECRET` | *(required)* | JWT signing secret (256-bit) |
-| `APP_JWT_EXPIRATION_MS` | `900000` | Access token TTL (15 min) |
-| `APP_REFRESH_TOKEN_EXPIRATION_DAYS` | `30` | Refresh token TTL |
-| `APP_STORAGE_BASE_URL` | `http://localhost/uploads` | Public URL for file uploads |
-| `VITE_API_BASE_URL` | `/api` | API base URL injected at build time |
+| Variable                            | Default                    | Description                         |
+| ----------------------------------- | -------------------------- | ----------------------------------- |
+| `POSTGRES_DB`                       | `lms_db`                   | Database name                       |
+| `POSTGRES_USER`                     | `lms_user`                 | DB username                         |
+| `POSTGRES_PASSWORD`                 | `lms_password`             | DB password                         |
+| `APP_JWT_SECRET`                    | _(required)_               | JWT signing secret (256-bit)        |
+| `APP_JWT_EXPIRATION_MS`             | `900000`                   | Access token TTL (15 min)           |
+| `APP_REFRESH_TOKEN_EXPIRATION_DAYS` | `30`                       | Refresh token TTL                   |
+| `APP_STORAGE_BASE_URL`              | `http://localhost/uploads` | Public URL for file uploads         |
+| `VITE_API_BASE_URL`                 | `/api`                     | API base URL injected at build time |
 
 ---
 
